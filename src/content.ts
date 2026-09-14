@@ -527,7 +527,7 @@
     const timestamp = getTimestamp();
     const action = buttonText.includes('Mute') ? 'Muted' : 'Blocked';
     const logEntry = tweetUrl
-      ? `${action} on ${timestamp}. Reason:\n${tweetUrl}\n${tweetText}`
+      ? `${action} on ${timestamp}. Reason:\n${tweetUrl}\n${tweetText ?? ''}`
       : `${action} on ${timestamp}.`;
     await saveNote(username, logEntry);
     debugLog('Mute/Block note saved for', username, 'Log entry:', logEntry);
@@ -547,7 +547,7 @@
     }
   }
 
-  function detectUsername(popupContainer: Element): string | void {
+  function detectUsername(popupContainer: Element): string | undefined {
     // try using engagement link
     const engagementLink: HTMLAnchorElement | null =
       popupContainer.querySelector('a[data-testid="tweetEngagements"]') ??
@@ -915,7 +915,7 @@
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
         if (!(node instanceof Element)) return;
-        const elementNode = node as Element;
+        const elementNode = node;
 
         // --- Logic from buttonObserver ---
         if (
@@ -958,7 +958,7 @@
         } else {
           // Also check descendants for hover cards
           if (typeof elementNode.querySelectorAll === 'function') {
-            const hoverCards = elementNode.querySelectorAll<Element>(
+            const hoverCards = elementNode.querySelectorAll(
               '[data-testid="HoverCard"]'
             );
             hoverCards.forEach((hc) => {

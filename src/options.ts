@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (state === 'loading') {
       const loadingDiv = document.createElement('div');
       loadingDiv.className = 'loading-indicator';
-      loadingDiv.textContent = message || 'Loading your notes...';
+      loadingDiv.textContent = message ?? 'Loading your notes...';
       notesContainer.appendChild(loadingDiv);
     } else if (state === 'error') {
       const errorDiv = document.createElement('div');
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const emptyDiv = document.createElement('div');
       emptyDiv.className = 'empty-state';
       emptyDiv.textContent =
-        message ||
+        message ??
         "You don't have any notes yet. Notes will appear here when you mute or block users on X.";
       notesContainer.appendChild(emptyDiv);
     }
@@ -308,13 +308,13 @@ document.addEventListener('DOMContentLoaded', function () {
     contentDiv.appendChild(headerDiv);
 
     // Get references to elements needed for event handlers
-    const usernameSpan = headerDiv.querySelector('.username') as HTMLElement;
-    const saveButton = headerDiv.querySelector(
-      '.save-note'
-    ) as HTMLButtonElement;
-    const deleteButton = headerDiv.querySelector(
-      '.delete-note'
-    ) as HTMLButtonElement;
+    const usernameSpan = headerDiv.querySelector<HTMLElement>('.username');
+    const saveButton = headerDiv.querySelector<HTMLButtonElement>('.save-note');
+    const deleteButton =
+      headerDiv.querySelector<HTMLButtonElement>('.delete-note');
+    if (!usernameSpan || !saveButton || !deleteButton) {
+      throw new Error('Failed to create note controls');
+    }
 
     // Create and set up textarea
     const textarea = createNoteTextarea(note.content);
@@ -379,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Function to handle textarea resizing
   function resizeTextarea(textarea: HTMLTextAreaElement): void {
     textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight}px`;
+    textarea.style.height = `${String(textarea.scrollHeight)}px`;
 
     // Show scrollbar only if content exceeds max-height
     const computedStyle = window.getComputedStyle(textarea);
@@ -403,7 +403,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Initial resize
-    setTimeout(() => resizeTextarea(textarea), 0);
+    setTimeout(() => {
+      resizeTextarea(textarea);
+    }, 0);
 
     // Make textarea editable on click
     textarea.addEventListener('click', function () {
@@ -416,7 +418,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Also resize on focus to ensure proper display
-    textarea.addEventListener('focus', () => resizeTextarea(textarea));
+    textarea.addEventListener('focus', () => {
+      resizeTextarea(textarea);
+    });
   }
 
   // Function to handle the save button event

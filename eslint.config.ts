@@ -5,11 +5,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 export default tseslint.config(
   // Global ignores
   {
-    ignores: [
-      'dist/**/*',
-      'eslint.config.ts',
-      'prettier.config.js'
-    ],
+    ignores: ['dist/**/*', 'eslint.config.ts', 'prettier.config.js'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked, // Use type-checked recommended rules
@@ -23,8 +19,8 @@ export default tseslint.config(
     },
     rules: {
       '@typescript-eslint/no-unnecessary-condition': 'off',
-      '@typescript-eslint/no-deprecated': 'off'
-    }
+      '@typescript-eslint/no-deprecated': 'off',
+    },
   },
   eslintConfigPrettier
 );
